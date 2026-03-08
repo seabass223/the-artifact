@@ -21,15 +21,18 @@ public class OrchestrationService(
     )
     {
         logger.LogInformation("[Flow1] Starting full scan + narration + audio pipeline");
-        DateTime nextRunUtc = DateTime.UtcNow.Date.AddDays(1).AddMinutes(10);
+        // Timer fires at 20:00 UTC on day N; next run is 20:00 UTC on day N+1.
+        DateTime nextRunUtc = DateTime.UtcNow.Date.AddDays(1).AddHours(20);
 
-        var scanFolder = scanDateFolder ?? $"{DateTime.UtcNow:yyyy-MM-dd}";
+        // Scan folder represents the upcoming UTC day (timer runs 4 h before midnight).
+        var scanFolder = scanDateFolder ?? $"{DateTime.UtcNow.Date.AddDays(1):yyyy-MM-dd}";
 
         var parsedScanDate = DateTime.Parse(scanFolder);
-        if (parsedScanDate > DateTime.UtcNow.Date)
+        // Allow today or tomorrow (timer runs at 20:00 UTC, targeting the next UTC day).
+        if (parsedScanDate > DateTime.UtcNow.Date.AddDays(1))
             throw new ArgumentOutOfRangeException(
                 nameof(scanDateFolder),
-                $"Scan date '{scanFolder}' cannot be in the future."
+                $"Scan date '{scanFolder}' cannot be more than one day in the future."
             );
         if (parsedScanDate < new DateTime(2026, 3, 7))
             throw new ArgumentOutOfRangeException(
@@ -80,6 +83,53 @@ public class OrchestrationService(
                 ct
             );
         }
+
+        return new OrchestrationResult
+        {
+            Flow = "flow1",
+            ExecutedUtc = DateTime.UtcNow,
+            Report = report,
+            NarrativeParagraph = narrative,
+            AudioBlobPath = audioUri,
+            TimingsBlobPath = timingsUri,
+            ArticleClassifications = classifications,
+        };
+    }
+
+    /// <summary>
+    /// Cache-only variant of Flow 1 — reads blobs only, never calls external services.
+    /// Returns null if any required artifact is missing.
+    /// </summary>
+    public async Task<OrchestrationResult?> TryGetCachedFlow1Async(
+        string? scanDateFolder = null,
+        CancellationToken ct = default
+    )
+    {
+        var scanFolder = scanDateFolder ?? $"{DateTime.UtcNow:yyyy-MM-dd}";
+
+        var reportBlobName = $"{scanFolder}/report.json";
+        var report = await blobStorage.TryDownloadJsonAsync<SignalOutput>(reportBlobName, ct);
+        if (report is null)
+            return null;
+
+        var narrativeBlobName = $"{scanFolder}/narrative.json";
+        var narrative = (await blobStorage.TryDownloadJsonAsync<NarrativeCache>(narrativeBlobName, ct))?.Text;
+        if (narrative is null)
+            return null;
+
+        var audioBlobName = $"{scanFolder}/audio.mp3";
+        var audioUri = await blobStorage.TryGetBlobUriAsync(audioBlobName, ct);
+        if (audioUri is null)
+            return null;
+
+        var timingsBlobName = $"{scanFolder}/audio.json";
+        var timingsUri = await blobStorage.TryGetBlobUriAsync(timingsBlobName, ct);
+        if (timingsUri is null)
+            return null;
+
+        var classificationsBlobName = $"{scanFolder}/classifications.json";
+        var cached = await blobStorage.TryDownloadJsonAsync<ClassificationResponse>(classificationsBlobName, ct);
+        var classifications = cached?.Classifications ?? [];
 
         return new OrchestrationResult
         {

@@ -11,7 +11,7 @@ public class SignalScanFunction(
 {
     [Function("SignalScan")]
     public async Task Run(
-        [TimerTrigger("0 0 0 * * *", RunOnStartup = false)] TimerInfo timer,
+        [TimerTrigger("0 0 20 * * *", RunOnStartup = false)] TimerInfo timer,
         CancellationToken ct
     )
     {

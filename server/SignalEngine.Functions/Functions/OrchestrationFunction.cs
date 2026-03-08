@@ -21,7 +21,8 @@ public class OrchestrationFunction(
 
     /// <summary>
     /// GET /api/orchestrate/flow1
-    /// Full pipeline: scan → report → narrate → TTS → mp3 → JSON result.
+    /// Returns cached artifacts only — never triggers external service calls.
+    /// Returns 404 if the cache is incomplete for the requested date.
     /// </summary>
     [Function("OrchestrateFlow1")]
     public async Task<HttpResponseData> Flow1(
@@ -30,7 +31,7 @@ public class OrchestrationFunction(
         CancellationToken ct
     )
     {
-        logger.LogInformation("[Flow1] HTTP trigger invoked");
+        logger.LogInformation("[Flow1] HTTP trigger invoked (cache-only)");
         var query = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
         var dateParam = query["date"];
         var scanDateFolder = DateTime.TryParseExact(
@@ -42,17 +43,19 @@ public class OrchestrationFunction(
         )
             ? dateParam
             : null;
-        try
+
+        var result = await orchestration.TryGetCachedFlow1Async(scanDateFolder, ct);
+        if (result is null)
         {
-            var result = await orchestration.RunFlow1Async(scanDateFolder, ct);
-            return await JsonResponseAsync(req, result, ct);
+            var notFound = req.CreateResponse(HttpStatusCode.NotFound);
+            await notFound.WriteStringAsync(
+                "No cached data available for the requested date. The timer trigger will populate the cache.",
+                ct
+            );
+            return notFound;
         }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            var response = req.CreateResponse(HttpStatusCode.BadRequest);
-            await response.WriteStringAsync(ex.Message, ct);
-            return response;
-        }
+
+        return await JsonResponseAsync(req, result, ct);
     }
 
     // -------------------------------------------------------------------------
