@@ -1,0 +1,61 @@
+/* ─── Preloader ───────────────────────────────────────────────────────────── */
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--preloader-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease-out;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#preloader-text {
+  font-family: var(--font);
+  font-size: clamp(11px, 1.4vw, 14px);
+  color: var(--preloader-color);
+  line-height: 1.9;
+  letter-spacing: 0.08em;
+  white-space: pre-wrap;
+  text-align: left;
+  max-width: 540px;
+  padding: 0 24px;
+  text-shadow: 0 0 8px currentColor;
+}
+
+#preloader-text.cursor::after {
+  content: '\2588';
+  animation: blink-cursor 0.8s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+#preloader-enter {
+  position: absolute;
+  bottom: clamp(32px, 6vh, 64px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font);
+  font-size: clamp(10px, 1.2vw, 13px);
+  letter-spacing: 0.2em;
+  color: var(--preloader-color);
+  text-shadow: 0 0 8px currentColor;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+#preloader-enter.visible {
+  animation: blink-cursor 1.2s step-end infinite;
+  opacity: 1;
+  pointer-events: auto;
+}

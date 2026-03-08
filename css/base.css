@@ -1,0 +1,62 @@
+/* ─── Reset & Root Variables ─────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Vignette */
+  --vignette-size: 0%;
+  --vignette-opacity: 0.98;
+  --vignette-transition-duration: 2.4s;
+  --vignette-transition-easing: ease-out;
+
+  /* Scene zoom */
+  --scene-zoom-scale: 1.5;
+  --scene-zoom-translate-y: 5%;
+  --scene-zoom-translate-x: -10%;
+  --scene-zoom-rotate: -15deg;
+  --scene-zoom-duration: 2.6s;
+  --scene-zoom-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Preloader */
+  --preloader-color: #7cffcb;
+  --preloader-dim-color: #3a6e5a;
+  --preloader-bg: #000000;
+
+  /* UI Colors */
+  --ui-glow: #7cffcb;
+  --ui-glow-dim: #3a6e5a;
+  --ui-warning: #ffcc00;
+  --ui-danger: #ff4444;
+  --ui-bg: rgba(0, 0, 0, 0.75);
+  --ui-border: rgba(124, 255, 203, 0.25);
+
+  /* General */
+  --bg: #000000;
+  --font: 'Share Tech Mono', monospace;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--font);
+}
+
+/* Override NES.css font everywhere */
+.nes-btn,
+.nes-container,
+.nes-text,
+.nes-badge,
+.nes-progress,
+.nes-table {
+  font-family: var(--font) !important;
+}

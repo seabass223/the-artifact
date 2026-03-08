@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE ARTIFACT</title>
+
+
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="images/icon.png" />
+
+  <!-- Open Graph -->
+  <meta name="description"
+    content="The Artifact is an immersive, interactive signal detector for the AI ecosystem. It scans GitHub, arXiv, Hugging Face, and X.com in real time, analyzes developments with GPT-4o, scores their anomaly potential, and synthesizes a spoken narrative via ElevenLabs — all delivered through an atmospheric single-page experience." />
+  <meta property="og:title" content="THE ARTIFACT" />
+  <meta property="og:description"
+    content="The Artifact is an immersive, interactive signal detector for the AI ecosystem. It scans GitHub, arXiv, Hugging Face, and X.com in real time, analyzes developments with GPT-4o, scores their anomaly potential, and synthesizes a spoken narrative via ElevenLabs — all delivered through an atmospheric single-page experience." />
+  <meta property="og:image" content="https://theartifacge57227mft7u6.z13.web.core.windows.net/images/og.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <!-- NES.css -->
+  <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css" rel="stylesheet" />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div id="preloader-text"></div>
+    <div id="preloader-enter">[ PRESS ENTER ]</div>
+  </div>
+
+  <!-- Main scene (background image) -->
+  <div id="scene-container">
+    <img id="scene-image" src="images/scene1.jpg" alt="THE ARTIFACT" draggable="false" />
+  </div>
+
+  <!-- THE ARTIFACT UI -->
+  <div id="engine-ui">
+
+    <!-- Header -->
+    <div class="engine-header">
+      <span class="engine-title">THE ARTIFACT</span>
+      <span id="engine-status" class="engine-status">AWAITING</span>
+    </div>
+
+    <!-- Executed timestamp -->
+    <div id="engine-timestamp" class="engine-timestamp"></div>
+    <div id="engine-nextrun" class="engine-timestamp"></div>
+
+    <!-- Waveform canvas (shown during playback) -->
+    <canvas id="waveform-canvas" class="waveform-canvas"></canvas>
+
+    <!-- Centered initiate button -->
+    <div class="engine-body engine-body--center">
+      <button id="btn-initiate" class="engine-btn">SCAN FOR SIGNALS</button>
+      <div id="scan-feed" class="scan-feed" aria-hidden="true">
+        <div class="scan-feed-row" data-row="0"></div>
+        <div class="scan-feed-row" data-row="1"></div>
+        <div class="scan-feed-row" data-row="2"></div>
+        <div class="scan-feed-row" data-row="3"></div>
+        <div class="scan-feed-lock"></div>
+      </div>
+    </div>
+
+    <!-- Stop transmission button -->
+    <div class="engine-footer">
+      <button id="btn-stop" class="engine-btn-stop">STOP TRANSMISSION</button>
+    </div>
+
+    <!-- Classification overlay (inside engine-ui to respect its bounds) -->
+    <div id="classification-display"></div>
+
+  </div>
+
+  <!-- Permanent vignette overlay -->
+  <div id="vignette"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+/* ─── Keyframes ───────────────────────────────────────────────────────────── */
+
+/* Cursor blink used in preloader typing */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor::after {
+  content: '▌';
+  display: inline-block;
+  animation: blink 0.9s step-start infinite;
+  color: var(--preloader-color);
+  margin-left: 2px;
+}
