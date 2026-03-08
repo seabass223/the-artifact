@@ -132,15 +132,14 @@
   z-index: 30;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, calc(-50% + 33px));
+  transform: translate(-50%, calc(-50% + min(2.148vw, 3.223vh)));
   text-align: center;
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(14px, 2.5vw, 28px);
+  font-size: min(1.823vw, 2.734vh);
   letter-spacing: 0.12em;
   color: var(--ui-glow);
   text-shadow: 0 0 12px var(--ui-glow), 0 0 30px rgba(124, 255, 203, 0.4);
-  max-width: 60vw;
-  width: 500px;
+  width: min(32.552vw, 48.828vh);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;
